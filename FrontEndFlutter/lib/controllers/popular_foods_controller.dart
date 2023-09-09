@@ -18,8 +18,9 @@ class PopularFoodsController extends GetxController {
       _popularFoodsList = [];
       _popularFoodsList
           .addAll(Product.fromJson(response.body).products as Iterable);
+      // addAll(Product.fromJson(response.body).products);
       update();
-      print(_popularFoodsList);
+      // print(_popularFoodsList);
     } else {}
   }
 }

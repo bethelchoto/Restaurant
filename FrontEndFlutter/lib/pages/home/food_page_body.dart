@@ -1,5 +1,7 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:ecommerce/controllers/popular_foods_controller.dart';
+import 'package:ecommerce/model/popular_food_model.dart';
+import 'package:ecommerce/utils/app_constants.dart';
 import 'package:ecommerce/utils/colors.dart';
 import 'package:ecommerce/utils/dimensions.dart';
 import 'package:ecommerce/widgets/big_text.dart';
@@ -39,15 +41,20 @@ class _FoodPageBodyState extends State<FoodPageBody> {
       children: [
         // slider section
         GetBuilder<PopularFoodsController>(builder: (popularProducts) {
-          return Container(
-            height: 320,
-            child: PageView.builder(
-                controller: pageController,
-                itemCount: popularProducts.popularFoodsList.length,
-                itemBuilder: (context, position) {
-                  return _buildPageItem(position);
-                }),
-          );
+          return popularProducts.isLoaded
+              ? Container(
+                  height: 320,
+                  child: PageView.builder(
+                      controller: pageController,
+                      itemCount: popularProducts.popularFoodsList.length,
+                      itemBuilder: (context, position) {
+                        return _buildPageItem(position,
+                            popularProducts.popularFoodsList[position]);
+                      }),
+                )
+              : CircularProgressIndicator(
+                  color: AppColors.mainColor,
+                );
         }),
         //  dots section
         GetBuilder<PopularFoodsController>(builder: (popularProducts) {
@@ -172,7 +179,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
     );
   }
 
-  Widget _buildPageItem(int index) {
+  Widget _buildPageItem(int index, ProductsModel popularFood) {
     Matrix4 matrix = Matrix4.identity();
     if (index == _currentPageValue.floor()) {
       var currentScale = 1 - (_currentPageValue - index) * (1 - _scaleFactor);
@@ -211,7 +218,10 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               color: index.isEven ? Color(0xFF69c5df) : Color(0xFF9294cc),
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage("assets/images/image0001.jpg"),
+                image: NetworkImage(
+                  "http://127.0.0.1:8000/${popularFood.img!}",
+                  // AppConstants.baseUrl + "/" + popularFood.img!,
+                ),
               ),
             ),
           ),
@@ -243,8 +253,8 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                   left: Dimensions.height15,
                   bottom: Dimensions.height10,
                 ),
-                child: const AppColumn(
-                  text: "Rice And Chicken",
+                child: AppColumn(
+                  text: popularFood.name!,
                 ),
               ),
             ),

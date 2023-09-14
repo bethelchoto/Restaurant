@@ -2,10 +2,10 @@ class Product {
   int? _totalSize;
   int? _typeId;
   int? _offset;
-  // late List<ProductsModel> _products; // tutorial
-  // List<ProductsModel> get products => _products; // tutorial
-  late List<ProductsModel>? _products; // from json
-  List<ProductsModel>? get products => _products;
+  late List<ProductsModel> _products; // tutorial
+  List<ProductsModel> get products => _products; // tutorial
+  // late List<ProductsModel>? _products; // from json
+  // List<ProductsModel>? get products => _products;
 
   Product(
       {required totalSize,

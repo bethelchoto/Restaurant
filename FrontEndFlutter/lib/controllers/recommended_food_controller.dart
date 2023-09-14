@@ -17,9 +17,10 @@ class RecommendedFoodsController extends GetxController {
     Response response = await recommendedFoodsRepo.getRecommendedFoodsList();
     if (response.statusCode == 200) {
       // print('got products');
+      // print(recommendedFoods.recommendedFoodsList.length);
       _recommendedFoodsList = [];
       _recommendedFoodsList
-          .addAll(Product.fromJson(response.body).products as Iterable);
+          .addAll(Product.fromJson(response.body).products);
       // addAll(Product.fromJson(response.body).products);
       _isLoaded = true;
       update();

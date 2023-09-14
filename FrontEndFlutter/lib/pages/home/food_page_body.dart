@@ -1,6 +1,8 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:ecommerce/controllers/popular_foods_controller.dart';
+import 'package:ecommerce/controllers/recommended_food_controller.dart';
 import 'package:ecommerce/model/popular_food_model.dart';
+import 'package:ecommerce/pages/food/popular_food.dart';
 import 'package:ecommerce/utils/app_constants.dart';
 import 'package:ecommerce/utils/colors.dart';
 import 'package:ecommerce/utils/dimensions.dart';
@@ -44,17 +46,22 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           return popularProducts.isLoaded
               ? Container(
                   height: 320,
-                  child: PageView.builder(
-                      controller: pageController,
-                      itemCount: popularProducts.popularFoodsList.length,
-                      itemBuilder: (context, position) {
-                        return _buildPageItem(position,
-                            popularProducts.popularFoodsList[position]);
-                      }),
-                )
-              : CircularProgressIndicator(
-                  color: AppColors.mainColor,
-                );
+                  child: GestureDetector(
+                    onTap: (){
+                      Get.to(()=>PopularFoodDetail());
+                    },
+                    child: PageView.builder(
+                        controller: pageController,
+                        itemCount: popularProducts.popularFoodsList.length,
+                        itemBuilder: (context, position) {
+                          return _buildPageItem(position,
+                              popularProducts.popularFoodsList[position]);
+                        }),
+                  ),
+                ):Container(color: AppColors.mainColor,);
+              // : CircularProgressIndicator(
+              //     color: AppColors.mainColor,
+              //   );
         }),
         //  dots section
         GetBuilder<PopularFoodsController>(builder: (popularProducts) {
@@ -79,7 +86,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              BigText(text: "Popular"),
+              BigText(text: "Recommended Foods"),
               SizedBox(width: Dimensions.width10),
               Container(
                 margin: const EdgeInsets.only(bottom: 3),
@@ -93,16 +100,17 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               ),
               Container(
                 margin: const EdgeInsets.only(bottom: 2),
-                child: SmallText(text: "Popular dishes"),
+                child: SmallText(text: "food pairing"),
               ),
             ],
           ),
         ),
         // ListView for food and images
-        ListView.builder(
+        GetBuilder<RecommendedFoodsController>(builder:(recommendedFoods){
+          return recommendedFoods.isLoaded?ListView.builder(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: 10,
+          itemCount: recommendedFoods.recommendedFoodsList.length,
           itemBuilder: (context, index) {
             return Container(
               margin: EdgeInsets.only(
@@ -118,11 +126,21 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.radius20),
                       color: Colors.black87,
-                      // color: Colors.white38,
+
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: AssetImage("assets/images/image0001.jpg"),
                       ),
+
+              //         image: DecorationImage(
+              //   fit: BoxFit.cover,
+              //   image: NetworkImage(
+              //   AppConstants.baseUrl + "/" + "images/9QIoTb0yziogA7fOXhzsGzV8qyyOp4CT.jpg",
+              // //     "http://127.0.0.1:8000/${recommendedFoods.recommendedFoodsList[index].img!}",
+              // //     // AppConstants.baseUrl + "/" + popularFood.img!,
+              //   ),
+              // ),
+
                     ),
                   ),
 
@@ -143,7 +161,7 @@ class _FoodPageBodyState extends State<FoodPageBody> {
                         ),
                         child: Column(
                           children: [
-                            BigText(text: "Delicious fruit meal in Zimbabwe"),
+                            BigText(text: recommendedFoods.recommendedFoodsList[index].name!),
                             SmallText(text: "The shona name of the meal"),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,7 +192,10 @@ class _FoodPageBodyState extends State<FoodPageBody> {
               ),
             );
           },
-        ),
+        ):Container(color: AppColors.mainColor,);
+        // CircularProgressIndicator(color: AppColors.mainColor,);
+        })
+        
       ],
     );
   }

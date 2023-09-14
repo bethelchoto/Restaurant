@@ -20,7 +20,7 @@ class PopularFoodsController extends GetxController {
       // print('got products');
       _popularFoodsList = [];
       _popularFoodsList
-          .addAll(Product.fromJson(response.body).products as Iterable);
+          .addAll(Product.fromJson(response.body).products);
       // addAll(Product.fromJson(response.body).products);
       _isLoaded = true;
       update();
